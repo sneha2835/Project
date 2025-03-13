@@ -2,7 +2,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
-    pass  # You can add custom fields if needed
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=50, unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'  # Use email instead of username for authentication
+    REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.email
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
