@@ -40,3 +40,29 @@ class AIPrediction(models.Model):
     predicted_expense = models.DecimalField(max_digits=10, decimal_places=2)
     prediction_date = models.DateField()
     id = models.BigAutoField(primary_key=True)
+
+class OverspendingAlert(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=50)
+    alert_type = models.CharField(max_length=50, choices=[
+        ('Overspending', 'Overspending'),
+        ('Unusual Transaction', 'Unusual Transaction')
+    ])
+    alert_message = models.TextField()
+    alert_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.category} - {self.alert_type}"
+
+
+class FinancialReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    report_type = models.CharField(max_length=50, choices=[
+        ('Monthly Summary', 'Monthly Summary'),
+        ('Yearly Report', 'Yearly Report')
+    ])
+    report_data = models.JSONField()  # Stores report details (expenses, savings, etc.)
+    generated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.report_type}"
